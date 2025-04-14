@@ -13,7 +13,11 @@ function App() {
   const [addedProducts, setAddedProducts] = useState([]);
 
   const updateProductQuantity = (name, quantity) => {
-    setAddedProducts(curr => curr.map(p => p.name === name ? { ...p, quantity } : p))
+    if (quantity < 1 || isNaN(quantity)) {
+      return;
+    }
+    setAddedProducts(curr =>
+      curr.map(p => p.name === name ? { ...p, quantity } : p))
   }
 
   const addToCart = product => {
@@ -49,7 +53,10 @@ function App() {
         <ul>
           {addedProducts.map((p, i) => (
             <li key={i}>
-              <p>{p.quantity} x {p.name} ({p.price.toFixed(2)}€)</p>
+              <p>
+                <input type="number" value={p.quantity} onChange={e => updateProductQuantity(p.name, parseInt(e.target.value))} />
+                <span> x {p.name} ({p.price.toFixed(2)}€)</span>
+              </p>
               <button onClick={() => removeFromCart(p)}>Rimuovi dal carrello</button>
             </li>
           ))}
